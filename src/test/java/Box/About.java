@@ -82,15 +82,26 @@ class About {
         ArrayList<String> removedoc = new ArrayList<>();
         removedocmap.put(Thread.currentThread().getId(),removedoc);
 
+      DesiredCapabilities desiredCap = DesiredCapabilities.chrome();
+desiredCap.setCapability("headless", true);
+
+      ChromeOptions options = new ChromeOptions();
+      options.addArguments("--headless");
+       options.addArguments("window-size=1920x1080");
+        options.addArguments("--lang=ru");
+
+        DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+        capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+      
         RemoteWebDriver driver = null;
         if (System.getProperty("remote.grid") != null) {
             try {
-                driver = new RemoteWebDriver(new URL(System.getProperty("remote.grid")), new ChromeOptions());
+                driver = new RemoteWebDriver(new URL(System.getProperty("remote.grid")), capabilities);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
         } else {
-            driver = new ChromeDriver();
+            driver = new ChromeDriver(capabilities);
         }
         driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
         try {
